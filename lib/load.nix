@@ -1,15 +1,15 @@
 lib:
+with lib;
 let
   utils = import ./utils.nix lib;
 in rec {
   loadSources = dir:
     let
       go = dir: segs:
-        with lib;
         let
           entries = mapAttrsToList (name: type:
             { inherit name type; }
-          ) (readDir dir);
+          ) (builtins.readDir dir);
           files = filter (e:
             e.type == "regular" && hasSuffix ".nix" e.name
           ) entries;
@@ -20,14 +20,14 @@ in rec {
           ) dirs;
 
           recResults = concatMap (d:
-            go "${dir}/${d.name}" (segs ++ d.name)
+            go "${dir}/${d.name}" (segs ++ [d.name])
           ) partitionedDirs.wrong;
 
           baseResults = map (f:
             let name = removeSuffix ".nix" f.name;
             in {
               inherit name;
-              segs = segs ++ name;
+              segs = segs ++ [name];
               path = "${dir}/${f}";
           }) files ++ partitionedDirs.right;
 

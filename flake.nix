@@ -36,7 +36,7 @@
 
       lib = nixpkgs.lib.extend (final: prev: import ./lib prev);
 
-      overlays = lib.loadOverlays { inherit inputs; dir = ./overlays };
+      overlays = lib.loadOverlays { inherit inputs; dir = ./overlays; };
 
       pkgs = import nixpkgs {
         inherit system overlays;
@@ -46,7 +46,7 @@
       # Load NixOS modules
       circusNixos = lib.loadModules {
         platform = "nixos";
-        dir = ./modules/nixos
+        dir = ./modules/nixos;
       };
       circusHome = lib.loadModules {
         platform = "home";
@@ -59,14 +59,14 @@
         inherit system;
         specialArgs = { inherit inputs lib; };
         modules = [
-          nixosNixos
+          circusNixos
           ./hosts/nixos/${hostname}
           home-manager.nixosModules.home-manager
           {
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              extraSpecialArgs = { inherit hostname inputs lib; };
+              extraSpecialArgs = { inherit hostname inputs; };
               users.${defaultUser} = {
                 imports = [ circusHome ];
                 home = {
@@ -77,7 +77,7 @@
               };
             };
           }
-        ]
+        ];
       };
 
     in {
@@ -90,7 +90,7 @@
 
       nixosConfigurations = lib.mapAttrs (name: _:
         mkHost name
-      ) (lib.readDir ./hosts/nixos);
+      ) (builtins.readDir ./hosts/nixos);
 
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = with pkgs; [

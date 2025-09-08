@@ -1,4 +1,4 @@
 lib: {
-  enabled = { enable = true };
-  disabled = { enable = false };
+  enabled = { enable = true; };
+  disabled = { enable = false; };
 }
