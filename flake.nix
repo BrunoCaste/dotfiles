@@ -55,11 +55,10 @@
 
       defaultUser = "bruno";
       
-      mkHost = hostname: nixpkgs.lib.nixosSystem {
+      mkHost = hostname: lib.nixosSystem {
         inherit system;
         specialArgs = { inherit inputs lib; };
         modules = [
-          circusNixos
           ./hosts/nixos/${hostname}
           home-manager.nixosModules.home-manager
           {
@@ -68,7 +67,6 @@
               useUserPackages = true;
               extraSpecialArgs = { inherit hostname inputs; };
               users.${defaultUser} = {
-                imports = [ circusHome ];
                 home = {
                   username = defaultUser;
                   homeDirectory = "/home/${defaultUser}";
@@ -77,7 +75,7 @@
               };
             };
           }
-        ];
+        ] ++ circusNixos ++ circusHome;
       };
 
     in {

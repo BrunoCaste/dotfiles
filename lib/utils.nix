@@ -1,6 +1,10 @@
-lib: {
+lib:
+
+with lib;
+
+{
   listToNestedAttrs = f: list:
-    lib.foldl' (acc: x:
-      acc // lib.setAttrByPath x.segs (f x)
+    foldl' (acc: x:
+      acc // setAttrByPath (splitString "." x.name) (f x)
     ) {} list;
 }
