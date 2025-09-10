@@ -21,7 +21,7 @@ with lib;
       };
     in
     {
-      options = wrapperOpts // (baseModule.options or {});
+      options = recursiveUpdate wrapperOpts (baseModule.options or {});
       config = mkIf cfg.enable (baseModule.config or baseModule);
     };
   in

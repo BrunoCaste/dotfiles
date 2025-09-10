@@ -62,10 +62,11 @@
           ./hosts/nixos/${hostname}
           home-manager.nixosModules.home-manager
           {
+            nixpkgs.config.allowUnfree = true;
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              extraSpecialArgs = { inherit hostname inputs; };
+              extraSpecialArgs = { inherit hostname inputs pkgs; };
               users.${defaultUser} = {
                 home = {
                   username = defaultUser;
