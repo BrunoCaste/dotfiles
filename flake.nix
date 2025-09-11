@@ -71,7 +71,6 @@
                 home = {
                   username = defaultUser;
                   homeDirectory = "/home/${defaultUser}";
-                  stateVersion = "24.05";
                 };
               };
             };
