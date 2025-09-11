@@ -11,5 +11,7 @@ with lib;
   circus.nixos = {
     base = enabled;
     boot = enabled;
+    doas = enabled;
+    network = enabled;
   };
 }
