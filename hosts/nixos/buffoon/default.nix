@@ -13,5 +13,11 @@ with lib;
     boot = enabled;
     doas = enabled;
     network = enabled;
+
+    hyprland = enabled;
+  };
+
+  circus.home = {
+    hyprland = enabled;
   };
 }
