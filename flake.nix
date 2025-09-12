@@ -53,8 +53,6 @@
         dir = ./modules/home;
       };
 
-      defaultUser = "bruno";
-      
       mkHost = hostname: lib.nixosSystem {
         inherit system;
         specialArgs = { inherit inputs lib; };
@@ -63,16 +61,10 @@
           home-manager.nixosModules.home-manager
           {
             home-manager = {
-	      sharedModules = circusHome;
+            sharedModules = circusHome;
               useGlobalPkgs = true;
               useUserPackages = true;
               extraSpecialArgs = { inherit hostname inputs; };
-              users.${defaultUser} = {
-                home = {
-                  username = defaultUser;
-                  homeDirectory = "/home/${defaultUser}";
-                };
-              };
             };
           }
         ] ++ circusNixos;

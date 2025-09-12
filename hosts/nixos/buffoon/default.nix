@@ -23,7 +23,9 @@ with lib;
     home.stateVersion = "25.05";
 
     circus.home = {
+      base = enabled;
       hyprland = enabled;
+      hyprsleep = enabled;
       alacritty = enabled;
     };
   };
