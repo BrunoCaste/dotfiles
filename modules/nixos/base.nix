@@ -48,14 +48,23 @@ with lib;
   };
 
   environment.systemPackages = with pkgs; [
-    vim
     wget
     curl
     git
   ];
 
-  programs.zsh.enable = true;
+  programs.zsh = enabled;
 
+  programs.neovim.enable = true;
+  programs.nano.enable = false;
+
+  programs.neovim = {
+    defaultEditor = true;
+    viAlias = true;
+    vimAlias = true;
+  };
+
+  nixpkgs.config.allowUnfree = true;
   hardware.enableAllFirmware = true;
 }
 

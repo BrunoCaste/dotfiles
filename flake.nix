@@ -62,11 +62,11 @@
           ./hosts/nixos/${hostname}
           home-manager.nixosModules.home-manager
           {
-            nixpkgs.config.allowUnfree = true;
             home-manager = {
+	      sharedModules = circusHome;
               useGlobalPkgs = true;
               useUserPackages = true;
-              extraSpecialArgs = { inherit hostname inputs pkgs; };
+              extraSpecialArgs = { inherit hostname inputs; };
               users.${defaultUser} = {
                 home = {
                   username = defaultUser;
@@ -75,7 +75,7 @@
               };
             };
           }
-        ] ++ circusNixos ++ circusHome;
+        ] ++ circusNixos;
       };
 
     in {

@@ -31,15 +31,6 @@ in {
       ];
     };
 
-    # Required packages
-    environment.systemPackages = with pkgs; [
-      wl-clipboard
-      wl-clip-persist
-      cliphist
-      wf-recorder
-      mako
-    ];
-
     # Session variables
     environment.sessionVariables = {
       WLR_NO_HARDWARE_CURSORS = "1";

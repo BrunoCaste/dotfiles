@@ -55,5 +55,7 @@ in {
         DNSOverTLS=yes
       '';
     };
+
+    users.users.bruno.extraGroups = [ "networkmanager" ];
   };
 }
