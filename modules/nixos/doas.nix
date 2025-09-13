@@ -28,12 +28,14 @@ in {
         keepEnv = true;
         persist = true;
         noPass = cfg.wheelNoPass;
+	setEnv = cfg.keepEnv;
       }
       {
         users = [ "bruno" ];
         keepEnv = true;
         persist = true;
         noPass = cfg.wheelNoPass;
+	setEnv = cfg.keepEnv;
       }
     ];
 
@@ -41,11 +43,5 @@ in {
     environment.systemPackages = with pkgs; [
       doas
     ];
-
-    # Allow doas to keep some environment variables
-    security.doas.extraConfig = ''
-      permit setenv { $(concatStringsSep " " cfg.keepEnv) } :wheel
-      permit setenv { $(concatStringsSep " " cfg.keepEnv) } bruno
-    '';
   };
 }

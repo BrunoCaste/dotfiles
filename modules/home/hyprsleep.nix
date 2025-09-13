@@ -6,6 +6,11 @@ let
   cfg = config.circus.home.hyprsleep;
 in {
   options.circus.home.hyprsleep = {
+    lockGrace = mkOption {
+      type = types.int;
+      default = 15;
+      description = "Time in seconds before reguiring authentication";
+    };
     lockTimeout = mkOption {
       type = types.int;
       default = 300;
@@ -32,6 +37,7 @@ in {
     services.hypridle = let
       hyprctl = "${config.wayland.windowManager.hyprland.package}/bin/hyprctl";
       lockCmd = lib.getExe config.programs.hyprlock.package;
+      lockGrace = toString cfg.lockGrace;
     in {
       enable = true;
       package = inputs.hypridle.packages.${pkgs.system}.hypridle;
@@ -41,13 +47,13 @@ in {
           after_sleep_cmd = "${hyprctl} dispatch dpms on";
           before_sleep_cmd = "${pkgs.systemd}/bin/loginctl lock-session";
           ignore_dbus_inhibit = false;
-          lock_cmd = "pidof ${lockCmd} || ${lockCmd}";
+          lock_cmd = "pidof ${lockCmd} || ${lockCmd} --grace ${lockGrace}";
         };
 
         listener = [
           {
             timeout = cfg.lockTimeout;
-            on-timeout = "${pkgs.systemd}/bin/loginctl lock-session";
+            on-timeout = "${lockCmd} --grace ${lockGrace}";
           }
           {
             timeout = cfg.screenOffTimeout;
@@ -142,4 +148,5 @@ in {
         ];
       };
     };
+  };
 }
