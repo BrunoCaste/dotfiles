@@ -14,6 +14,7 @@ with lib;
     boot = enabled;
     doas = enabled;
     network = enabled;
+    keyboard = enabled;
 
     hyprland = enabled;
     sddm = enabled;

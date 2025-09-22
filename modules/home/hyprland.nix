@@ -56,7 +56,6 @@ in {
             natural_scroll = true;
             tap-to-click = true;
           };
-          kb_layout = "us";
         };
 
         # General window behavior
@@ -203,8 +202,12 @@ in {
           ", XF86AudioPlay, exec, playerctl play-pause"
           ", XF86AudioNext, exec, playerctl next"
           ", XF86AudioPrev, exec, playerctl previous"
+          ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
+          ", XF86MonBrightnessUp, exec, brightnessctl set 5%+"
         ];
       };
     };
+
+    home.packages = with pkgs; [ brightnessctl ];
   };
 }
