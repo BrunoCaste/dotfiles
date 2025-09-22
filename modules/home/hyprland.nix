@@ -11,15 +11,30 @@ in {
       default = [ ",preferred,auto,auto" ];
       description = "Monitor configurations";
     };
+
     terminal = mkOption {
-      type = types.str;
-      default = "alacritty";
+      type = types.package;
+      default = pkgs.alacritty;
       description = "Default terminal emulator";
     };
+
     launcher = mkOption {
-      type = types.str;
-      default = "wofi --show drun";
-      description = "Default application launcher";
+      type = types.submodule {
+        options = {
+          package = mkOption {
+            type = types.package;
+            default = pkgs.wofi;
+            description = "Launcher package to use";
+          };
+          args = mkOption {
+            type = types.str;
+            default = "--show drun";
+            description = "Arguments passed to the launcher command";
+          };
+        };
+      };
+      default = {};
+      description = "Application launcher configuration";
     };
   };
 
@@ -108,7 +123,10 @@ in {
         # Key bindings
         "$mainMod" = "SUPER";
 
-        bind = [
+        bind = let
+          terminal = getExe cfg.terminal;
+          launcher = getExe cfg.launcher.package;
+        in [
           # Window management
           "$mainMod, Q, killactive"
           "$mainMod SHIFT, M, exec, loginctl lock-session"
@@ -117,10 +135,8 @@ in {
           "$mainMod, F, fullscreen"
 
           # Applications
-          "$mainMod, T, exec, ${cfg.terminal}"
-          "$mainMod, Space, exec, pkill -x wofi || ${cfg.launcher}"
-          "$mainMod, B, exec, firefox"
-          "$mainMod, E, exec, nautilus"
+          "$mainMod, T, exec, ${terminal}"
+          "$mainMod, Space, exec, pkill -x ${launcher} || ${launcher} ${cfg.launcher.args}"
 
           # Focus movement
           "$mainMod, H, movefocus, l"

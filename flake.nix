@@ -83,10 +83,10 @@
       ) (builtins.readDir ./hosts/nixos);
 
       devShells.${system}.default = pkgs.mkShell {
-        buildInputs = with pkgs; [
-          nixos-rebuild
-          home-manager
-          git
+        buildInputs = [
+          pkgs.nixos-rebuild
+          pkgs.home-manager
+          pkgs.git
         ];
         shellHook = ''
           echo "🎪 Welcome to the Circus configuration!"
