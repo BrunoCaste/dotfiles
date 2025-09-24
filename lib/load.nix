@@ -31,7 +31,7 @@ in rec {
             in {
               name = prefix + name;
               path = "${dir}/${f.name}";
-          }) files ++ partitionedDirs.right;
+          }) (files ++ partitionedDirs.right);
 
         in
           recResults ++ baseResults;

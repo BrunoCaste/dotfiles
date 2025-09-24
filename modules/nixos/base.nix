@@ -42,7 +42,7 @@ with lib;
 
   users.users.bruno = {
     isNormalUser = true;
-    description = "Bruno (the Ringmaster)";
+    description = "Bruno";
     extraGroups = [ "wheel" ];
     shell = pkgs.zsh;
   };

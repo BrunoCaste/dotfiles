@@ -20,6 +20,9 @@ with lib;
     sddm = enabled;
 
     fonts = enabled;
+
+    audio = enabled;
+    bluetooth = enabled;
   };
 
   home-manager.users.bruno = { ... }: {
@@ -27,9 +30,13 @@ with lib;
 
     circus.home = {
       base = enabled;
-      hyprland = enabled;
+      hyprland = {
+        enable = true;
+        monitors = [ "eDP-1,1920x1080@60,0x0,1.25" ];
+      };
       hyprsleep = enabled;
       alacritty = enabled;
+      cli = enabled;
     };
 
     home.packages = with pkgs; [
