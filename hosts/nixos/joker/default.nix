@@ -36,6 +36,7 @@ with lib;
       };
       hyprsleep = enabled;
       alacritty = enabled;
+      zsh = enabled;
       cli = enabled;
     };
 
