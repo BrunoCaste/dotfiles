@@ -76,7 +76,7 @@ in {
       };
 
       sessionVariables = {
-        WORDCHARS = "$${WORDCHARS:s:/:}";
+        WORDCHARS =  "$" + "{WORDCHARS:s:/:}";
       };
 
       shellAliases = {
@@ -88,7 +88,6 @@ in {
         mkdir = "mkdir -p";
         cp = "cp -i";
         mv = "mv -i";
-        rm = "rm -i";
 
         # Misc
         "..." = "../..";

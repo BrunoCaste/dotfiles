@@ -32,10 +32,11 @@ with lib;
       base = enabled;
       hyprland = {
         enable = true;
-        monitors = [ "eDP-1,1920x1080@60,0x0,1.25" ];
+        monitors = [ "eDP-1,1920x1080@60,0x0,1" ];
       };
       hyprsleep = enabled;
       alacritty = enabled;
+      waybar = enabled;
       zsh = enabled;
       cli = enabled;
     };
