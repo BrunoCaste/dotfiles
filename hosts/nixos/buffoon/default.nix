@@ -1,7 +1,9 @@
-{ lib, pkgs, ... }:
-
+{
+  lib,
+  pkgs,
+  ...
+}:
 with lib;
-
 {
   imports = [ ./hardware-configuration.nix ];
 
@@ -11,34 +13,24 @@ with lib;
 
   circus.nixos = {
     base = enabled;
+    graphical = enabled;
     boot = enabled;
     doas = enabled;
     network = enabled;
 
-    hyprland = enabled;
-    sddm = enabled;
+    compositor.hyprland = enabled;
   };
 
-  home-manager.users.bruno = { ... }: {
-    home.stateVersion = "25.05";
+  home-manager.users.bruno =
+    { ... }:
+    {
+      home.stateVersion = "25.05";
 
-    circus.home = {
-      base = enabled;
-      hyprland = enabled;
-      hyprsleep = enabled;
-      alacritty = enabled;
+      circus.home = {
+        base = enabled;
+        compositor.hyprland = enabled;
+        compositor.hyprsleep = enabled;
+        desktop-apps.terminal = enabled;
+      };
     };
-  };
-
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
-    extraPackages = with pkgs; [
-      mesa
-      amdvlk
-    ];
-    extraPackages32 = with pkgs; [
-      driversi686Linux.amdvlk
-    ];
-  };
 }
