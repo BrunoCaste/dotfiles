@@ -3,40 +3,60 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    
+
     hyprland = {
       url = "github:hyprwm/Hyprland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    
+
     hyprpaper = {
       url = "github:hyprwm/hyprpaper";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    
+
     hypridle = {
       url = "github:hyprwm/hypridle";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    
+
     hyprlock = {
       url = "github:hyprwm/hyprlock";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    zen-browser = {
+      url = "github:youwen5/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = inputs @ { self, nixpkgs, home-manager, ... }:
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      home-manager,
+      ...
+    }:
     let
       system = "x86_64-linux";
 
-      lib = nixpkgs.lib.extend (final: prev: import ./lib prev);
+      lib = nixpkgs.lib.extend (
+        final: prev:
+        import ./lib {
+          inherit inputs;
+          lib = prev;
+        }
+      );
 
-      overlays = lib.loadOverlays { inherit inputs; dir = ./overlays; };
+      overlays = lib.loadOverlays {
+        inherit inputs;
+        dir = ./overlays;
+      };
 
       pkgs = import nixpkgs {
         inherit system overlays;
@@ -53,34 +73,35 @@
         dir = ./modules/home;
       };
 
-      mkHost = hostname: lib.nixosSystem {
-        inherit system;
-        specialArgs = { inherit inputs lib; };
-        modules = [
-          ./hosts/nixos/${hostname}
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-            sharedModules = circusHome;
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              extraSpecialArgs = { inherit hostname inputs; };
-            };
-          }
-        ] ++ circusNixos;
-      };
-
-    in {
-      inherit lib;
+      mkHost =
+        hostname:
+        lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs lib; };
+          modules = [
+            ./hosts/nixos/${hostname}
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                sharedModules = circusHome;
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                extraSpecialArgs = { inherit hostname inputs; };
+              };
+            }
+          ]
+          ++ circusNixos;
+        };
+    in
+    {
+      inherit self lib home-manager;
 
       packages.${system} = lib.loadPackages {
         inherit pkgs;
         dir = ./packages;
       };
 
-      nixosConfigurations = lib.mapAttrs (name: _:
-        mkHost name
-      ) (builtins.readDir ./hosts/nixos);
+      nixosConfigurations = lib.mapAttrs (name: _: mkHost name) (builtins.readDir ./hosts/nixos);
 
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = [
@@ -93,6 +114,6 @@
         '';
       };
 
-      formatter.${system} = pkgs.nixpkgs-fmt;
+      formatter.${system} = pkgs.nixfmt-tree;
     };
 }
