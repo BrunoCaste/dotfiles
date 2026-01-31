@@ -1,10 +1,12 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-let
+{ config
+, lib
+, pkgs
+, ...
+}:
+with lib; let
   cfg = config.circus.nixos.keyboard;
-in {
+in
+{
   options.circus.nixos.keyboard = {
     swapCapsEscape = mkOption {
       type = types.bool;

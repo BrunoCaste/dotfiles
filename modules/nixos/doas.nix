@@ -1,10 +1,12 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-let
+{ config
+, lib
+, pkgs
+, ...
+}:
+with lib; let
   cfg = config.circus.nixos.doas;
-in {
+in
+{
   options.circus.nixos.doas = {
     wheelNoPass = mkOption {
       type = types.bool;
@@ -28,14 +30,14 @@ in {
         keepEnv = true;
         persist = true;
         noPass = cfg.wheelNoPass;
-	setEnv = cfg.keepEnv;
+        setEnv = cfg.keepEnv;
       }
       {
         users = [ "bruno" ];
         keepEnv = true;
         persist = true;
         noPass = cfg.wheelNoPass;
-	setEnv = cfg.keepEnv;
+        setEnv = cfg.keepEnv;
       }
     ];
 

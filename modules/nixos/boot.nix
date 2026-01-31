@@ -1,10 +1,12 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-let
+{ config
+, lib
+, pkgs
+, ...
+}:
+with lib; let
   cfg = config.circus.nixos.boot;
-in {
+in
+{
   options.circus.nixos.boot = {
     bootType = mkOption {
       type = types.enum [ "systemd-boot" "grub" ];
@@ -26,7 +28,8 @@ in {
   config = {
     boot = {
       # Use systemd-boot or GRUB
-      loader = if cfg.bootType == "systemd-boot"
+      loader =
+        if cfg.bootType == "systemd-boot"
         then {
           systemd-boot = {
             enable = true;

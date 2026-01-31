@@ -1,8 +1,10 @@
-{ config, lib, pkgs, inputs, ... }:
-
-with lib;
-
-{
+{ config
+, lib
+, pkgs
+, inputs
+, ...
+}:
+with lib; {
   nix = {
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
@@ -10,11 +12,15 @@ with lib;
       trusted-users = [ "root" "@wheel" ];
       substituters = [
         "https://cache.nixos.org/"
+        "https://nix-community.cachix.org/"
         "https://hyprland.cachix.org"
+        "https://lean4.cachix.org/"
       ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+        "lean4.cachix.org-1:mawtxSxcaiWE24xCXXgh3qnvlTkyU7evRRnGeAhD4Wk="
       ];
     };
 
@@ -51,6 +57,7 @@ with lib;
     wget
     curl
     git
+    file
   ];
 
   programs.zsh = enabled;
@@ -58,13 +65,14 @@ with lib;
   programs.neovim.enable = true;
   programs.nano.enable = false;
 
-  programs.neovim = {
-    defaultEditor = true;
-    viAlias = true;
-    vimAlias = true;
-  };
+  # programs.neovim = {
+  # defaultEditor = true;
+  # viAlias = true;
+  # vimAlias = true;
+  # };
 
   nixpkgs.config.allowUnfree = true;
   hardware.enableAllFirmware = true;
-}
 
+  zramSwap.enable = true;
+}

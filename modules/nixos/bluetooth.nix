@@ -1,8 +1,9 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-{
+{ config
+, lib
+, pkgs
+, ...
+}:
+with lib; {
   options.circus.nixos.bluetooth = {
     powerOnBoot = mkOption {
       type = types.bool;

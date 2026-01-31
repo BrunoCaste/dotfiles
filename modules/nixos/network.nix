@@ -1,10 +1,12 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-let
+{ config
+, lib
+, pkgs
+, ...
+}:
+with lib; let
   cfg = config.circus.nixos.network;
-in {
+in
+{
   options.circus.nixos.network = {
     firewall = mkOption {
       type = types.bool;
@@ -13,7 +15,7 @@ in {
     };
     openPorts = mkOption {
       type = types.listOf types.int;
-      default = [];
+      default = [ ];
       description = "Additional ports to open in the firewall";
     };
   };
@@ -29,8 +31,14 @@ in {
         allowedTCPPorts = cfg.openPorts;
         # Common ports for development (development servers)
         allowedTCPPortRanges = [
-          { from = 3000; to = 3999; }
-          { from = 8000; to = 8999; }
+          {
+            from = 3000;
+            to = 3999;
+          }
+          {
+            from = 8000;
+            to = 8999;
+          }
         ];
       };
 
