@@ -1,8 +1,9 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-{
+{ config
+, lib
+, pkgs
+, ...
+}:
+with lib; {
   programs.bat = {
     enable = true;
     config = {

@@ -1,8 +1,9 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-{
+{ config
+, lib
+, pkgs
+, ...
+}:
+with lib; {
   programs.home-manager.enable = true;
 
   home = {
@@ -13,4 +14,3 @@ with lib;
   # Nix Flakes often needs Git
   programs.git.enable = true;
 }
-

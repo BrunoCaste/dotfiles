@@ -56,7 +56,8 @@ P_USER="%F{magenta}%n%f@%F{magenta}%m%f"
 P_PATH="%~"
 P_STATUS="%(0?.%F{green}.%F{red})"
 P_JOBS="%(1j.*.)"
+P_LVL="%(2L.%F{blue}%(3L.[%L].⋅).%f)"
 
 setopt promptsubst
-PROMPT="${P_USER}%B %b${P_PATH} ${P_STATUS}${P_JOBS}❭%f "
+PROMPT="${P_USER}%B %b${P_PATH} ${P_LVL}${P_STATUS}${P_JOBS}❭%f "
 RPROMPT='${vcs_info_msg_0_}'

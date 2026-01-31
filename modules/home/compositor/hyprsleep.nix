@@ -1,11 +1,14 @@
-{ config, lib, pkgs, inputs, ... }:
-
-with lib;
-
-let
-  cfg = config.circus.home.hyprsleep;
-in {
-  options.circus.home.hyprsleep = {
+{ config
+, lib
+, pkgs
+, inputs
+, ...
+}:
+with lib; let
+  cfg = config.circus.home.compositor.hyprsleep;
+in
+{
+  options.circus.home.compositor.hyprsleep = {
     lockGrace = mkOption {
       type = types.int;
       default = 15;
@@ -34,43 +37,52 @@ in {
   };
 
   config = {
-    services.hypridle = let
-      hyprctl = "${config.wayland.windowManager.hyprland.package}/bin/hyprctl";
-      lockCmd = lib.getExe config.programs.hyprlock.package;
-      lockGrace = toString cfg.lockGrace;
-    in {
-      enable = true;
-      package = inputs.hypridle.packages.${pkgs.system}.hypridle;
+    assertions = [
+      {
+        assertion = config.circus.home.compositor.hyprland.enable;
+        message = "Hyprsleep requires Hyprland to be enabled.";
+      }
+    ];
 
-      settings = {
-        general = {
-          after_sleep_cmd = "${hyprctl} dispatch dpms on";
-          before_sleep_cmd = "${pkgs.systemd}/bin/loginctl lock-session";
-          ignore_dbus_inhibit = false;
-          lock_cmd = "pidof ${lockCmd} || ${lockCmd} --grace ${lockGrace}";
+    services.hypridle =
+      let
+        hyprctl = "${config.wayland.windowManager.hyprland.package}/bin/hyprctl";
+        lockCmd = lib.getExe config.programs.hyprlock.package;
+        lockGrace = toString cfg.lockGrace;
+      in
+      {
+        enable = true;
+        package = inputs.hypridle.packages.${pkgs.stdenv.hostPlatform.system}.hypridle;
+
+        settings = {
+          general = {
+            after_sleep_cmd = "${hyprctl} dispatch dpms on";
+            before_sleep_cmd = "${pkgs.systemd}/bin/loginctl lock-session";
+            ignore_dbus_inhibit = false;
+            lock_cmd = "pidof ${lockCmd} || ${lockCmd} --grace ${lockGrace}";
+          };
+
+          listener = [
+            {
+              timeout = cfg.lockTimeout;
+              on-timeout = "${lockCmd} --grace ${lockGrace}";
+            }
+            {
+              timeout = cfg.screenOffTimeout;
+              on-timeout = "${hyprctl} dispatch dpms off";
+              on-resume = "${hyprctl} dispatch dpms on";
+            }
+            {
+              timeout = cfg.suspendTimeout;
+              on-timeout = "${pkgs.systemd}/bin/systemctl suspend";
+            }
+          ];
         };
-
-        listener = [
-          {
-            timeout = cfg.lockTimeout;
-            on-timeout = "${lockCmd} --grace ${lockGrace}";
-          }
-          {
-            timeout = cfg.screenOffTimeout;
-            on-timeout = "${hyprctl} dispatch dpms off";
-            on-resume = "${hyprctl} dispatch dpms on";
-          }
-          {
-            timeout = cfg.suspendTimeout;
-            on-timeout = "${pkgs.systemd}/bin/systemctl suspend";
-          }
-        ];
       };
-    };
 
     programs.hyprlock = {
       enable = true;
-      package = inputs.hyprlock.packages.${pkgs.system}.hyprlock;
+      package = inputs.hyprlock.packages.${pkgs.stdenv.hostPlatform.system}.hyprlock;
 
       settings = {
         general = {

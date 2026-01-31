@@ -1,11 +1,13 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-let
-  cfg = config.circus.home.alacritty;
-in {
-  options.circus.home.alacritty = {
+{ config
+, lib
+, pkgs
+, ...
+}:
+with lib; let
+  cfg = config.circus.home.desktop-apps.terminal;
+in
+{
+  options.circus.home.desktop-apps.terminal = {
     font = mkOption {
       type = types.submodule {
         options = {
@@ -21,7 +23,7 @@ in {
           };
         };
       };
-      default = {};
+      default = { };
       description = "Font configuration";
     };
   };
@@ -32,7 +34,10 @@ in {
 
       settings = {
         window = {
-          padding = { x = 2; y = 2; };
+          padding = {
+            x = 2;
+            y = 2;
+          };
           dynamic_padding = true;
 
           decorations = "None";
@@ -148,13 +153,33 @@ in {
 
         keyboard.bindings = [
           # Copy/Paste
-          { key = "V"; mods = "Control|Shift"; action = "Paste"; }
-          { key = "C"; mods = "Control|Shift"; action = "Copy"; }
+          {
+            key = "V";
+            mods = "Control|Shift";
+            action = "Paste";
+          }
+          {
+            key = "C";
+            mods = "Control|Shift";
+            action = "Copy";
+          }
 
           # Font size
-          { key = "Plus"; mods = "Control"; action = "IncreaseFontSize"; }
-          { key = "Minus"; mods = "Control"; action = "DecreaseFontSize"; }
-          { key = "Key0"; mods = "Control"; action = "ResetFontSize"; }
+          {
+            key = "Plus";
+            mods = "Control";
+            action = "IncreaseFontSize";
+          }
+          {
+            key = "Minus";
+            mods = "Control";
+            action = "DecreaseFontSize";
+          }
+          {
+            key = "Key0";
+            mods = "Control";
+            action = "ResetFontSize";
+          }
         ];
       };
     };

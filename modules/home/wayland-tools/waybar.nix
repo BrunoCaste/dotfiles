@@ -1,24 +1,29 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-let
-  cfg = config.circus.home.waybar;
-in {
-  options.circus.home.waybar = {
+{ config
+, lib
+, pkgs
+, ...
+}:
+with lib; let
+  cfg = config.circus.home.wayland-tools.waybar;
+in
+{
+  options.circus.home.wayland-tools.waybar = {
     position = mkOption {
       type = types.enum [ "top" "bottom" ];
       default = "top";
       description = "Bar position";
     };
-    # modules = mkOption {
-    #   type = types.listOf types.str;
-    #   default = [ "workspaces" "window" "clock" "battery" "network" "pulseaudio" "tray" ];
-    #   description = "Modules to show on the bar";
-    # };
   };
 
   config = {
+    assertions = [
+      {
+        # Ensure Hyprland is enabled if Waybar is enabled
+        assertion = config.circus.home.compositor.hyprland.enable;
+        message = "Waybar requires Hyprland to be enabled.";
+      }
+    ];
+
     programs.waybar = {
       enable = true;
       systemd.enable = true;
@@ -26,7 +31,7 @@ in {
       settings = {
         mainBar = {
           layer = "top";
-          position = config.circus.home.waybar.position;
+          position = cfg.position;
           height = 30;
           spacing = 4;
 
@@ -63,8 +68,8 @@ in {
           };
 
           clock = {
-            format = "{:%I:%M -%m-%d}";
-            format-alt = "{:%Y-%m-%d}";
+            format = "{:%H:%M}";
+            format-alt = "{:%d/%m}";
             tooltip-format = "<tt><big>{calendar}</big></tt>";
           };
 
