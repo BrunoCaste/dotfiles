@@ -1,4 +1,9 @@
-{ lib, stdenv, hello }: stdenv.mkDerivation {
+{ lib
+, stdenv
+, hello
+,
+}:
+stdenv.mkDerivation {
   pname = "circus-example";
   version = "1.0";
   src = hello.src;
