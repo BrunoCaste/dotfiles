@@ -1,6 +1,7 @@
-lib:
+args @ { ... }:
 let
-  load = import ./load.nix lib;
-  module = import ./module.nix lib;
-  utils = import ./utils.nix lib;
-in load // module // utils
+  load = import ./load.nix args;
+  module = import ./module.nix args;
+  utils = import ./utils.nix args;
+in
+load // module // utils
